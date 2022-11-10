@@ -3,6 +3,7 @@ from typing import Any, Final
 
 from discord import Bot, Intents
 
+from tater_bot.config import Config
 from tater_bot.log import Log
 
 
@@ -13,7 +14,7 @@ class TaterBot(Bot):
         # noinspection PyDunderSlots,PyUnresolvedReferences
         intents.message_content = True
 
-        super().__init__(intents=intents, **options)
+        super().__init__(intents=intents, owner_id=Config.owner_id, **options)
 
         self._force_sync: Final[bool] = force_sync
         self._initialized: bool = False

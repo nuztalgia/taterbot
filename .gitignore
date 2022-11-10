@@ -2,6 +2,7 @@
 *.key
 *.py[cdo]
 *.sw[a-p]
+*config.json
 .env
 .idea/
 .tox/

@@ -5,10 +5,21 @@ from discord import Activity, ActivityType
 
 
 def main() -> int:
-    botstrap = Botstrap(
-        name := "tater-bot",
-        version=version(name),
-        colors=CliColors(primary=Color.pink),
+    botstrap = (
+        Botstrap(
+            name := "tater-bot",
+            version=version(name),
+            colors=CliColors(primary=Color.pink),
+        )
+        .register_token(
+            uid="dev",
+            display_name=Color.yellow("development"),
+        )
+        .register_token(
+            uid="prod",
+            requires_password=True,
+            display_name=Color.green("production"),
+        )
     )
     args = botstrap.parse_args(
         force_sync=Option(flag=True, help="Force-sync all TaterBot app commands."),
