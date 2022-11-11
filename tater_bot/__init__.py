@@ -6,4 +6,5 @@ __all__ = [
     "Config",
     "Log",
     "TaterBot",
+    "utils",
 ]
