@@ -63,6 +63,11 @@ class TaterBot(discord.Bot):
         re_fetch = self._initialized
         fetching_verb = f"{'Re-f' if re_fetch else 'F'}etching"
 
+        if re_fetch:
+            # noinspection PyProtectedMember
+            Log.d(f"Reloading config from '{Config._file_path}'.")
+            Config.reload_from_file()
+
         def log_fetch(fetched_noun: str) -> None:
             Log.d(f"{fetching_verb} {fetched_noun}.")
 
@@ -79,6 +84,7 @@ class TaterBot(discord.Bot):
             log_fetch("emoji")
             self.emoji = await self.home_guild.fetch_emoji(Config.emoji_id)
 
+        self.known_channels.clear()
         for channel_key, channel_id in Config.channels.items():
             try:
                 if re_fetch or not (channel := self.get_channel(channel_id)):
@@ -88,6 +94,7 @@ class TaterBot(discord.Bot):
             except discord.errors.Forbidden:
                 Log.w(f"Missing access to channel '{channel_key}'. ")
 
+        self.known_users.clear()
         for user_key, user_id in Config.users.items():
             if re_fetch or not (user := self.get_user(user_id)):
                 log_fetch(f"user '{user_key}'")
@@ -108,3 +115,13 @@ class TaterBot(discord.Bot):
 
         Log.i(f"TaterBot is online and ready!")
         self.log_attributes()
+
+    # noinspection PyMethodMayBeStatic
+    async def on_application_command(self, ctx: discord.ApplicationContext) -> None:
+        command_name = ctx.command.qualified_name
+        channel_name = (
+            "their DMs"
+            if (ctx.channel.type == discord.ChannelType.private)
+            else get_loggable_channel_name(ctx.channel)
+        )
+        Log.i(f"{ctx.user} used command '{command_name}' in {channel_name}.")

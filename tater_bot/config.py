@@ -15,10 +15,13 @@ class _Config:
     file_path: InitVar[Path | None] = None
     _file_path: Path = Path(__file__).parent / "config.json"
 
-    def __post_init__(self, file_path: Path | None):
+    def __post_init__(self, file_path: Path | None) -> None:
         if file_path:
             self._file_path = file_path
 
+        self.reload_from_file()
+
+    def reload_from_file(self) -> None:
         if self._file_path.is_dir():
             error_message = f"Expected a file, but found a directory: {self._file_path}"
             raise IsADirectoryError(error_message)
@@ -35,7 +38,10 @@ class _Config:
                 ):
                     self.__dict__[attr_name] = saved_value
 
-        self.save()
+        self.save_to_file()
+
+    def save_to_file(self, indent: int | None = 2) -> None:
+        self._file_path.write_text(f"{self.to_string(indent)}\n", newline="\n")
 
     def to_dict(self) -> dict[str, Any]:
         internal_attr_names = ("file_path", "_file_path")
@@ -47,9 +53,6 @@ class _Config:
 
     def to_string(self, indent: int | None = 2) -> str:
         return json.dumps(self.to_dict(), indent=indent)
-
-    def save(self, indent: int | None = 2) -> None:
-        self._file_path.write_text(f"{self.to_string(indent)}\n", newline="\n")
 
 
 Config: Final[_Config] = _Config()
