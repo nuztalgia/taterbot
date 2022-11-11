@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import Any, Final
 
 import emoji
-from discord import ClientUser, Color, Embed, File, Message, User
+from discord import Color, Embed, File, Message, User
 from discord.abc import GuildChannel
 
 _sanitize_channel_name: Final[Callable[[str], str]] = functools.partial(
@@ -45,8 +45,9 @@ def create_message_embed(message: Message, *, link: bool = True) -> Embed:
 
 
 def get_channel_display_name(
-    user: User | ClientUser | None,
     channel: GuildChannel,
+    user: User | None = None,
+    *,
     allow_mention: bool = True,
     bold_text: bool = True,
 ) -> str:
@@ -78,3 +79,7 @@ async def get_files_from_message(message: Message) -> list[File]:
         (await attachment.to_file(use_cached=True))
         for attachment in message.attachments
     ]
+
+
+def get_loggable_channel_name(channel: GuildChannel) -> str:
+    return get_channel_display_name(channel, allow_mention=False, bold_text=False)

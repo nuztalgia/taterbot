@@ -8,7 +8,9 @@ from typing import Any, Final
 class _Config:
     owner_id: int = 0
     home_id: int = 0
+    emoji_id: int = 0
     channels: dict[str, int] = field(default_factory=dict)
+    users: dict[str, int] = field(default_factory=dict)
 
     file_path: InitVar[Path | None] = None
     _file_path: Path = Path(__file__).parent / "config.json"
