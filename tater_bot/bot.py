@@ -59,47 +59,49 @@ class TaterBot(discord.Bot):
         ]:
             Log.i(f"{Color.cyan(f'{prefix}{attribute_name}:')} {attribute_value}")
 
+    # noinspection PyProtectedMember
     async def make_fetch_happen(self) -> None:
-        re_fetch = self._initialized
-        fetching_verb = f"{'Re-f' if re_fetch else 'F'}etching"
-
-        if re_fetch:
-            # noinspection PyProtectedMember
+        if self._initialized:
             Log.d(f"Reloading config from '{Config._file_path}'.")
             Config.reload_from_file()
+        else:
+            Log.d(f"Loaded config from '{Config._file_path}'.")
 
-        def log_fetch(fetched_noun: str) -> None:
-            Log.d(f"{fetching_verb} {fetched_noun}.")
-
-        if re_fetch or not self.owner:
-            log_fetch("owner")
+        if self._initialized or not self.owner:
+            Log.d("Fetching bot owner user.")
             self.owner = await self.get_or_fetch_user(self.owner_id)
             await self.owner.create_dm()
 
-        if re_fetch or not self.home_guild:
-            log_fetch("home guild")
+        if self._initialized or not self.home_guild:
+            Log.d("Fetching home guild/server.")
             self.home_guild = await self.fetch_guild(Config.home_id)
 
-        if re_fetch or not self.emoji:
-            log_fetch("emoji")
+        if self._initialized or not self.emoji:
+            Log.d("Fetching signature emoji from home guild.")
             self.emoji = await self.home_guild.fetch_emoji(Config.emoji_id)
 
         self.known_channels.clear()
         for channel_key, channel_id in Config.channels.items():
-            try:
-                if re_fetch or not (channel := self.get_channel(channel_id)):
-                    log_fetch(f"channel '{channel_key}'")
-                    channel = await self.fetch_channel(channel_id)
-                self.known_channels[channel_key] = channel
-            except discord.errors.Forbidden:
-                Log.w(f"Missing access to channel '{channel_key}'. ")
+            await self._cache_channel(channel_key, channel_id)
 
         self.known_users.clear()
         for user_key, user_id in Config.users.items():
-            if re_fetch or not (user := self.get_user(user_id)):
-                log_fetch(f"user '{user_key}'")
-                user = await self.fetch_user(user_id)
-            self.known_users[f"@{user_key}"] = user
+            await self._cache_user(user_key, user_id)
+
+    async def _cache_channel(self, channel_key: str, channel_id: int) -> None:
+        try:
+            if self._initialized or not (channel := self.get_channel(channel_id)):
+                Log.d(f"Fetching known channel '{channel_key}'.")
+                channel = await self.fetch_channel(channel_id)
+            self.known_channels[channel_key] = channel
+        except discord.errors.Forbidden:
+            Log.w(f"Missing access to channel '{channel_key}'.")
+
+    async def _cache_user(self, user_key: str, user_id: int) -> None:
+        if self._initialized or not (user := self.get_user(user_id)):
+            Log.d(f"Fetching known user '{user_key}'.")
+            user = await self.fetch_user(user_id)
+        self.known_users[f"@{user_key}"] = user
 
     async def on_ready(self) -> None:
         if self._initialized:
