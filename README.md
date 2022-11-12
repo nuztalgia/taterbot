@@ -17,17 +17,19 @@ It lets me (hereafter referred to as a "Potato") connect with a group of people
 that I love dearly (hereafter referred to as "Clowns") even though my actual
 Discord account is no longer in their server. Frankly, it's an overengineered
 way for me to maintain boundaries and protect my mental health, because I'm my
-own worst saboteur.
+own worst sabo**tater**.
 
 <b>TMI</b> (too much information) - Maybe.<br><b>LOL</b> (lots of love) -
 Absolutely. 💜
 
-Are you also a Potato looking to communi**tate** with a group of Clowns? Maybe
+Are you also a Potato looking to associ**tate** with a group of Clowns? Maybe
 TaterBot can help you out. It's a shy bot that forms a very strong attachment to
 its Potato, so it isn't publicly hosted anywhere - but you're more than welcome
-to install/clone/fork this project and run your own instance of TaterBot. 🌱
+to install/clone/fork this project and run your own personal TaterBot! 🌟
 
 ## Adopting a TaterBot
+
+### 📜 Prerequisites
 
 First, you'll need to make sure you have a few things ready in order to properly
 care for your TaterBot:
@@ -41,22 +43,53 @@ care for your TaterBot:
   [terminal or "command line"](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Understanding_client-side_tools/Command_line#welcome_to_the_terminal)
   on your system
 
-Do you meet the adoption requirements? If so, let's get this potato rolling!
-**Install TaterBot** by using this command:
+Do you meet the adoption requirements? If so, let's get this Potato rolling! 🥁
+
+### 🌱 Installation & Usage
+
+You can install and/or up**tate** TaterBot by using this command:
 
 ```
 pip install -U git+https://github.com/nuztalgia/tater-bot.git
 ```
 
-Once you've installed TaterBot, you can run it by using the following command
-from any directory:
+Once you've installed TaterBot, you can run it by using this command from any
+directory:
 
 ```
 tater-bot
 ```
 
+<details>
+<summary>
+For information about the available command-line options, run
+<code>tater-bot -h</code> (or click to expand this section).
+</summary>
+<br>
+
+```
+usage: tater-bot [-f] [-t] [-v] [--help] [<token id>]
+
+  A Discord bot that serves as a cross-server spectater and communitater.
+  Run "tater-bot" with no parameters to start the bot in development mode.
+
+positional arguments:
+  <token id>        The ID of the token to use to run the bot.
+                    Valid options are "dev" and "prod".
+
+options:
+  -f, --force-sync  Force-sync all TaterBot app commands.
+  -t, --tokens      View/manage your saved Discord bot tokens.
+  -v, --version     Display the current bot version.
+  -h, --help        Display this help message.
+```
+
+</details>
+
+### 🔑 Onboarding & Security
+
 If everything was planted correctly, you should see something like this after
-running the above command:
+running `tater-bot` for the first time:
 
 ```
 tater-bot: You currently don't have a saved development bot token.
@@ -70,8 +103,62 @@ with other people. For these reasons, TaterBot uses
 [**Botstrap**](https://botstrap.readthedocs.io/) to safely encrypt/store tokens
 and avoid potential security disas**taters**. 💥
 
-Once you have your bot token ready, you can proceed through the Botstrap setup
-by typing `yes` and hitting <kbd>Enter</kbd>.
+<details>
+<summary>
+If you don't have a bot token and want more info on how to get one, click to
+to expand this section.
+</summary>
+<hr>
+
+1. To obtain a bot token, you'll first have to create a new **Discord App**. Go
+   to the [Developer Portal](https://discord.com/developers/applications) and
+   click the <kbd>New Application</kbd> button in the top-right corner. Enter an
+   endearing name for your bot and click <kbd>Create</kbd>.
+
+2. Now you should be on the **General Information** page for your app. Give it a
+   cute profile picture and description - these will be visible to your Clowns!
+   After **tating** care of those two things, you can move on from this page.
+
+3. The next step is to add a "bot user" to your app, which allows it to appear
+   in Discord similarly to other members. Navi**tate** to the **Bot** page using
+   the sidebar menu on the left, then click the <kbd>Add Bot</kbd> button on the
+   right.
+
+4. After creating a bot user, you should see a <kbd>Reset Token</kbd> button.
+   Click it to generate your new bot token! 🎉
+
+<hr>
+</details>
+
+<details>
+<summary>
+Once you have a bot token, you can proceed through the Botstrap setup. Click to
+expand this section for details.
+</summary>
+<hr>
+
+1. At the initial prompt that asks `Would you like to add one now?`, type `yes`
+   (or just `y`) and hit <kbd>Enter</kbd>.
+
+2. Next, you'll be asked to enter your bot token (i.e. copy and paste it in).
+   When you do, your input won't be visible on your screen - this is by design,
+   to keep your token safe! Just trust that it's there, and hit <kbd>Enter</kbd>
+   again.
+
+3. If you entered your token correctly, you'll be prompted to run your bot. Go
+   ahead and type `y`, then hit <kbd>Enter</kbd>.
+
+<hr>
+</details>
+
+After your bot successfully authenti**tates** with Discord, you should see this
+text on your screen:
+
+```
+TaterBot is online and ready!
+```
+
+Congratu**tations**, you're now a proud parent Potato! 👶
 
 ## Development
 
