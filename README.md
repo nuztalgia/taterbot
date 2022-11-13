@@ -25,7 +25,7 @@ Absolutely. 💜
 Are you also a Potato looking to associ**tate** with a group of Clowns? Maybe
 TaterBot can help you out. It's a shy bot that forms a very strong attachment to
 its Potato, so it isn't publicly hosted anywhere - but you're more than welcome
-to install/clone/fork this project and run your own personal TaterBot! 🌟
+to install/clone/**fork** this project and run your own personal TaterBot! 🌟
 
 ## Adopting a TaterBot
 
@@ -113,7 +113,7 @@ to expand this section.
 1. To obtain a bot token, you'll first have to create a new **Discord App**. Go
    to the [Developer Portal](https://discord.com/developers/applications) and
    click the <kbd>New Application</kbd> button in the top-right corner. Enter an
-   endearing name for your bot and click <kbd>Create</kbd>.
+   ap**peel**ing name for your bot and click <kbd>Create</kbd>.
 
 2. Now you should be on the **General Information** page for your app. Give it a
    cute profile picture and description - these will be visible to your Clowns!
@@ -125,15 +125,15 @@ to expand this section.
    right.
 
 4. After creating a bot user, you should see a <kbd>Reset Token</kbd> button.
-   Click it to generate your new bot token! 🎉
+   Click it to gener**tate** your bot token! 🎉
 
 <hr>
 </details>
 
 <details>
 <summary>
-Once you have a bot token, you can proceed through the Botstrap setup. Click to
-expand this section for details.
+If you have a bot token but are unsure of how to proceed through the Botstrap
+setup, click to expand this section.
 </summary>
 <hr>
 
@@ -141,7 +141,7 @@ expand this section for details.
    (or just `y`) and hit <kbd>Enter</kbd>.
 
 2. Next, you'll be asked to enter your bot token (i.e. copy and paste it in).
-   When you do, your input won't be visible on your screen - this is by design,
+   When you do, your input won't be visible on the screen - this is by design,
    to keep your token safe! Just trust that it's there, and hit <kbd>Enter</kbd>
    again.
 
@@ -151,14 +151,68 @@ expand this section for details.
 <hr>
 </details>
 
-After your bot successfully authenti**tates** with Discord, you should see this
-text on your screen:
+After you set up your token and your bot successfully authenti**tates** with
+Discord, you should see this message:
 
 ```
 TaterBot is online and ready!
 ```
 
-Congratu**tations**, you're now a proud parent Potato! 👶
+Congratu**tations**, you're now the proud Potato parent of a tiny Tater tot! 👶
+
+## Putting Down Roots
+
+### 🥔 Instructions for the Potato
+
+So your bot is online and ready, but where exactly is it? If you haven't added
+it to any Discord servers yet, you should check your potato clock... because
+it's time for your TaterBot to put down its roots! 🌞
+
+<img align="right" src="https://user-images.githubusercontent.com/95021853/201503489-c583281a-659b-4fd9-b87d-a969267c1c2a.png" width=320>
+
+Open up the [Developer Portal](https://discord.com/developers/applications/)
+(again) and select your app. Navi**tate** to the **Bot** page using the sidebar
+menu on the left, then scroll down a little bit. There are **two** switches that
+you need to flip on this page:
+
+- **Server Members Intent** - This should be turned **ON**.
+- **Message Content Intent** - This should be turned **ON**.
+
+Make sure to leave all the other switches as they originally were!
+
+<img align="left" src="https://user-images.githubusercontent.com/95021853/201504285-7398b3ad-20c6-47f2-8b11-4414cbb4222f.png" width=320>
+
+Next, click **OAuth2** in the sidebar menu on the left. It'll expand to reveal
+two sub-pages - click the one labeled **URL Generator**. On this page, select
+the `bot` checkbox, and another section will appear.
+
+There are **seven** new checkboxes that you need to select in order for your
+TaterBot to work, and they're all in the **Text Permissions** column:<br>
+`Send Messages`, `Embed Links`, `Attach Files`, `Read Message History`,
+`Use External Emojis`, `Add Reactions`, and `Use Slash Commands`.
+
+Once you've selected all the appropriate permissions, click the <kbd>Copy</kbd>
+button in the bottom-right corner of the page. Send the result (your TaterBot's
+custom invite link) to a trusted Clown, then wait anxiously for them to accept
+it. 🤡
+
+### 🎪 Instructions for the Clowns
+
+<img align="right" src="https://user-images.githubusercontent.com/95021853/201505432-1fb57038-b441-493e-a425-f2a199498df6.png" width=100>
+
+A server admin for the Clowns will have to open the bot invite link provided by
+the Potato in order to allow their TaterBot to facili**tate** communi**tation**.
+Upon doing so, they should see a dialog that looks similar to the one in the
+picture to the right - but with different names and icons, of course. (You _did_
+give your bot a cute name and avatar like the instructions said to do... right?
+😜)
+
+The Clowns admin should verify that the requested permissions are
+`Send Messages`, `Embed Links`, `Attach Files`, `Read Message History`,
+`Add Reactions`, `Use External Emojis`, and last but not least,
+`Use Application Commands`. They should then grant your TaterBot these
+permissions and add it to the server by clicking the <kbd>Authorize</kbd>
+button.
 
 ## Development
 
