@@ -7,7 +7,7 @@ from discord import Activity, ActivityType
 def main() -> int:
     botstrap = (
         Botstrap(
-            name := "tater-bot",
+            name := "taterbot",
             version=version(name),
             colors=CliColors(primary=Color.pink),
         )
@@ -25,7 +25,7 @@ def main() -> int:
         force_sync=Option(flag=True, help="Force-sync all TaterBot app commands."),
     )
     botstrap.run_bot(
-        bot_class="tater_bot.bot.TaterBot",
+        bot_class="taterbot.bot.TaterBot",
         activity=Activity(type=ActivityType.listening, name="@TaterBot"),
         force_sync=args.force_sync,
     )

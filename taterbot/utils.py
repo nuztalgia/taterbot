@@ -45,7 +45,7 @@ def create_message_embed(message: Message, *, link: bool = True) -> Embed:
 
 
 def get_asset_file(file_name: str) -> File:
-    return File(f"tater_bot/assets/{file_name}")
+    return File(f"taterbot/assets/{file_name}")
 
 
 def get_channel_display_name(

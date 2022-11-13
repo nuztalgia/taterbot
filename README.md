@@ -1,14 +1,16 @@
 <h1>
-<picture><img src="https://github.com/nuztalgia/tater-bot/blob/main/tater_bot/assets/potato-purple-heart.png" width=32></picture>
+<picture>
+<img src="https://github.com/nuztalgia/taterbot/blob/main/taterbot/assets/potato-purple-heart.png" width=32>
+</picture>
 TaterBot
 </h1>
 
 [![Botstrap](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fnuztalgia%2Fbotstrap%2Fmain%2F.github%2Fbadges%2Fbotstrap-on.json&logo=0)](https://github.com/nuztalgia/botstrap)
-[![Project License](https://img.shields.io/github/license/nuztalgia/tater-bot?color=blue)](https://github.com/nuztalgia/tater-bot/blob/main/LICENSE)
-[![Python Version](https://img.shields.io/badge/python-3.10-blue)](https://github.com/nuztalgia/tater-bot/blob/main/pyproject.toml)
-[![Build Status](https://img.shields.io/github/workflow/status/nuztalgia/tater-bot/Build)](https://github.com/nuztalgia/tater-bot/actions/workflows/build.yml)
-[![CodeQL Status](https://img.shields.io/github/workflow/status/nuztalgia/tater-bot/CodeQL?label=codeQL)](https://github.com/nuztalgia/tater-bot/actions/workflows/codeql.yml)
-[![CodeFactor](https://img.shields.io/codefactor/grade/github/nuztalgia/tater-bot/main?label=codefactor)](https://www.codefactor.io/repository/github/nuztalgia/tater-bot)
+[![Project License](https://img.shields.io/github/license/nuztalgia/taterbot?color=blue)](https://github.com/nuztalgia/taterbot/blob/main/LICENSE)
+[![Python Version](https://img.shields.io/badge/python-3.10-blue)](https://github.com/nuztalgia/taterbot/blob/main/pyproject.toml)
+[![Build Status](https://img.shields.io/github/workflow/status/nuztalgia/taterbot/Build)](https://github.com/nuztalgia/taterbot/actions/workflows/build.yml)
+[![CodeQL Status](https://img.shields.io/github/workflow/status/nuztalgia/taterbot/CodeQL?label=codeQL)](https://github.com/nuztalgia/taterbot/actions/workflows/codeql.yml)
+[![CodeFactor](https://img.shields.io/codefactor/grade/github/nuztalgia/taterbot/main?label=codefactor)](https://www.codefactor.io/repository/github/nuztalgia/taterbot)
 
 TaterBot is a personal Discord bot that serves as a cross-server spec**tater**
 and communi**tater**. 🥔👾💗
@@ -50,28 +52,28 @@ Do you meet the adoption requirements? If so, let's get this Potato rolling! �
 You can install and/or up**tate** TaterBot by using this command:
 
 ```
-pip install -U git+https://github.com/nuztalgia/tater-bot.git
+pip install -U git+https://github.com/nuztalgia/taterbot.git
 ```
 
 Once you've installed TaterBot, you can run it by using this command from any
 directory:
 
 ```
-tater-bot
+taterbot
 ```
 
 <details>
 <summary>
 For information about the available command-line options, run
-<code>tater-bot -h</code> (or click to expand this section).
+<code>taterbot -h</code> (or click to expand this section).
 </summary>
 <br>
 
 ```
-usage: tater-bot [-f] [-t] [-v] [--help] [<token id>]
+usage: taterbot [-f] [-t] [-v] [--help] [<token id>]
 
   A Discord bot that serves as a cross-server spectater and communitater.
-  Run "tater-bot" with no parameters to start the bot in development mode.
+  Run "taterbot" with no parameters to start the bot in development mode.
 
 positional arguments:
   <token id>        The ID of the token to use to run the bot.
@@ -89,10 +91,10 @@ options:
 ### 🔑 Onboarding & Security
 
 If everything was planted correctly, you should see something like this after
-running `tater-bot` for the first time:
+running `taterbot` for the first time:
 
 ```
-tater-bot: You currently don't have a saved development bot token.
+taterbot: You currently don't have a saved development bot token.
 Would you like to add one now? If so, type "yes" or "y":
 ```
 
@@ -220,31 +222,31 @@ Are you a fellow compu**tater** programmer? If so, you might be interested in
 these commands:
 
 ```
-git clone https://github.com/nuztalgia/tater-bot.git
-cd tater-bot
+git clone https://github.com/nuztalgia/taterbot.git
+cd taterbot
 pip install -e .
 ```
 
 This will create an
 [editable](https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs)
 installation of TaterBot in your current environment. Any changes you make to
-its code will immediately take effect when you run `tater-bot` locally.
+its code will immediately take effect when you run `taterbot` locally.
 
-[Contributions](https://github.com/nuztalgia/tater-bot/blob/main/.github/contributing.md)
+[Contributions](https://github.com/nuztalgia/taterbot/blob/main/.github/contributing.md)
 to this project are very welcome, as long as they
-[pass](https://results.pre-commit.ci/latest/github/nuztalgia/tater-bot/main)
-[all](https://github.com/nuztalgia/tater-bot/actions/workflows/build.yml)
-[the](https://github.com/nuztalgia/tater-bot/actions/workflows/codeql.yml)
-[checks](https://www.codefactor.io/repository/github/nuztalgia/tater-bot) to
-keep it green and healthy! 💚
+[pass](https://results.pre-commit.ci/latest/github/nuztalgia/taterbot/main)
+[all](https://github.com/nuztalgia/taterbot/actions/workflows/build.yml)
+[the](https://github.com/nuztalgia/taterbot/actions/workflows/codeql.yml)
+[checks](https://www.codefactor.io/repository/github/nuztalgia/taterbot) to keep
+it green and healthy! 💚
 
 ## License
 
 **Source Code:** Copyright © 2022
 [Nuztalgia / Lovegood](https://github.com/nuztalgia). Released under the
-[MIT License](https://github.com/nuztalgia/tater-bot/blob/main/LICENSE).
+[MIT License](https://github.com/nuztalgia/taterbot/blob/main/LICENSE).
 
 **Image Assets:** Included under [fair use](https://www.copyright.gov/fair-use/)
 and **not** covered by the above license. See
-[`assets/README.md`](https://github.com/nuztalgia/tater-bot/tree/main/tater_bot/assets)
+[`assets/README.md`](https://github.com/nuztalgia/taterbot/tree/main/taterbot/assets)
 for more details.

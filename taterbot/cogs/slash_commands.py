@@ -2,7 +2,7 @@ from typing import Final
 
 from discord import ApplicationContext, Cog, slash_command
 
-from tater_bot import Log, TaterBot, utils
+from taterbot import Log, TaterBot, utils
 
 
 class SlashCommands(Cog):

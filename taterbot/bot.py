@@ -4,9 +4,9 @@ from typing import Any, Final
 import discord
 from botstrap import Color
 
-from tater_bot.config import Config
-from tater_bot.log import Log
-from tater_bot.utils import get_loggable_channel_name
+from taterbot.config import Config
+from taterbot.log import Log
+from taterbot.utils import get_loggable_channel_name
 
 
 # noinspection PyDunderSlots, PyUnresolvedReferences
@@ -38,7 +38,7 @@ class TaterBot(discord.Bot):
 
         for file_path in Path(__file__).parent.glob("cogs/[!_]*.py"):
             Log.d(f"Loading extension '{file_path.stem}'.")
-            self.load_extension(f"tater_bot.cogs.{file_path.stem}")
+            self.load_extension(f"taterbot.cogs.{file_path.stem}")
 
     def log_attributes(self, prefix: str = "  - ") -> None:
         loggable_home_guild = self.home_guild.name + Color.grey(

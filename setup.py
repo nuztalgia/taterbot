@@ -6,5 +6,5 @@ setup(
         "emoji ==2.2.0",
         "py-cord ==2.2.2",
     ],
-    url="https://github.com/nuztalgia/tater-bot",
+    url="https://github.com/nuztalgia/taterbot",
 )
