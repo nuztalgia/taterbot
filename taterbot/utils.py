@@ -1,11 +1,11 @@
 import functools
 import re
 from collections.abc import Callable
+from string import Template
 from typing import Any, Final
 
 import emoji
-from discord import Color, Embed, File, Message, User
-from discord.abc import GuildChannel
+from discord import Color, Embed, File, Message, User, abc
 
 _sanitize_channel_name: Final[Callable[[str], str]] = functools.partial(
     re.compile(r"(:\w+:|^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$)").sub, ""
@@ -27,6 +27,31 @@ def create_embed(
     )
 
 
+def create_embed_for_author(
+    user: abc.User,
+    /,
+    description: str = "",
+    header_template: str = "$user",
+    header_link_url: str | None = None,
+    **kwargs: Any,
+) -> Embed:
+    return create_embed(description, **kwargs).set_author(
+        name=Template(header_template).substitute(user=user),
+        url=header_link_url or Embed.Empty,
+        icon_url=user.avatar.url,
+    )
+
+
+def create_embed_for_message(message: Message, *, link: bool = True) -> Embed:
+    return create_embed_for_author(
+        message.author,
+        description=message.content,
+        header_template="Message from $user",
+        header_link_url=message.jump_url if link else None,
+        timestamp=message.created_at,
+    )
+
+
 def create_error_embed(
     description: str = "",
     *,
@@ -36,20 +61,12 @@ def create_error_embed(
     return create_embed(description, title=title, color=color)
 
 
-def create_message_embed(message: Message, *, link: bool = True) -> Embed:
-    return create_embed(message.content, timestamp=message.created_at).set_author(
-        name=f"Message from {message.author}",
-        icon_url=message.author.avatar.url,
-        url=message.jump_url if link else Embed.Empty,
-    )
-
-
 def get_asset_file(file_name: str) -> File:
     return File(f"taterbot/assets/{file_name}")
 
 
 def get_channel_display_name(
-    channel: GuildChannel,
+    channel: abc.GuildChannel,
     user: User | None = None,
     *,
     allow_mention: bool = True,
@@ -85,5 +102,5 @@ async def get_files_from_message(message: Message) -> list[File]:
     ]
 
 
-def get_loggable_channel_name(channel: GuildChannel) -> str:
+def get_loggable_channel_name(channel: abc.GuildChannel) -> str:
     return get_channel_display_name(channel, allow_mention=False, bold_text=False)

@@ -12,6 +12,19 @@ These short clips (`that-is-so-fetch.gif` and
 [Paramount Movies' GIPHY page](https://giphy.com/paramountmovies). (**Warning:**
 The page contains auto-playing audio content!)
 
+## Palpatine GIF
+
+<picture>
+<img align="left" src="https://user-images.githubusercontent.com/95021853/201542392-2c2acdae-4d20-4ede-a2a1-5347a378b604.png" width=48>
+</picture>
+
+This clip (`you-think-you-can-stop-me.gif`) of the iconic
+[**Darth Sidious**](https://www.imdb.com/title/tt0121766/characters/nm0001519)
+is from 2005's
+[Star Wars: Episode III - Revenge of the Sith](https://en.wikipedia.org/wiki/Star_Wars:_Episode_III_%E2%80%93_Revenge_of_the_Sith).
+(**Note:** The line in the film is actually **"You will not stop me"**, but the
+misquote in this GIF is more fitting for how TaterBot uses it.)
+
 ## Tato the Potato
 
 <picture>
