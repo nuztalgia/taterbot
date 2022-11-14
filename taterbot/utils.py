@@ -36,7 +36,7 @@ def create_embed_for_author(
     **kwargs: Any,
 ) -> Embed:
     return create_embed(description, **kwargs).set_author(
-        name=Template(header_template).substitute(user=user),
+        name=Template(header_template).substitute(user=user.display_name),
         url=header_link_url or Embed.Empty,
         icon_url=user.avatar.url,
     )
