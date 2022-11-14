@@ -2,9 +2,8 @@
 
 Thank you for your interest in contributing to this project! All types of
 contributions are encouraged and valued. If you haven't already done so, please
-take a couple of minutes to read through the
-[code of conduct](code_of_conduct.md) and make sure you wholeheartedly agree to
-abide by it. 💖
+take a few minutes to read through the [code of conduct](code_of_conduct.md) and
+make sure you wholeheartedly agree to abide by it. 💖
 
 ## Pull Requests
 
@@ -18,8 +17,9 @@ in advance!
 ### After you open a PR
 
 The [pre-commit](https://pre-commit.com/) CI service will run some checks to
-ensure that your changes keep this project
-[clean, green, and healthy](https://results.pre-commit.ci/latest/github/nuztalgia/taterbot/main).
+ensure that your changes keep this project [clean, green, and healthy][ci].
+
+[ci]: https://results.pre-commit.ci/latest/github/nuztalgia/taterbot/main
 
 - Some failing checks may be automatically fixed by the service, and the
   resulting changes will be added to your PR as a subsequent commit.
@@ -44,9 +44,8 @@ it.
 ### Licensing
 
 This project uses the [MIT License](https://choosealicense.com/licenses/mit/).
-All contributions, forks, and/or usage of this project's codebase **must**
-adhere to that license, as stipulated by the [`LICENSE`](/LICENSE) file in this
-repository.
+All contributions to this project's codebase **must** adhere to that license, as
+stipulated by the [`LICENSE`](/LICENSE) file in this repository.
 
 Furthermore, by submitting a pull request to this repo, you certify that you
 authored or otherwise have the necessary rights to submit **all** of the code

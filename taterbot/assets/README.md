@@ -18,17 +18,21 @@ The page contains auto-playing audio content!)
 <img align="left" src="https://user-images.githubusercontent.com/95021853/201542392-2c2acdae-4d20-4ede-a2a1-5347a378b604.png" width=48>
 </picture>
 
-This clip (`you-think-you-can-stop-me.gif`) of the iconic
-[**Darth Sidious**](https://www.imdb.com/title/tt0121766/characters/nm0001519)
-is from 2005's
-[Star Wars: Episode III - Revenge of the Sith](https://en.wikipedia.org/wiki/Star_Wars:_Episode_III_%E2%80%93_Revenge_of_the_Sith).
-(**Note:** The line in the film is actually **"You will not stop me"**, but the
-misquote in this GIF is more fitting for how TaterBot uses it.)
+This clip (`you-think-you-can-stop-me.gif`) of the iconic [**Darth Sidious**][1]
+is from 2005's [Star Wars: Episode III - Revenge of the Sith][2]. (**Note:** The
+line in the film is actually **"You will not stop me"**, but the misquote in
+this GIF is more fitting for [how TaterBot uses it][3].)
+
+[1]: https://www.imdb.com/title/tt0121766/characters/nm0001519
+[2]:
+  https://en.wikipedia.org/wiki/Star_Wars:_Episode_III_%E2%80%93_Revenge_of_the_Sith
+[3]:
+  https://github.com/nuztalgia/taterbot/blob/00f506ea473cc4597bf3656ee7098fde4078d392/taterbot/cogs/slash_commands.py#L40-L44
 
 ## Tato the Potato
 
 <picture>
-<img align="left" src="./potato-purple-heart.png" width=48>
+<img align="left" src="https://github.com/nuztalgia/taterbot/blob/main/taterbot/assets/potato-purple-heart.png" width=48>
 </picture>
 
 **Tato** is the mascot of the [**Lost in Potato**](https://discord.gg/tato)
