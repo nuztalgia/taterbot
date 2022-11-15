@@ -32,7 +32,7 @@ this GIF is more fitting for [how TaterBot uses it][3].)
 ## Tato the Potato
 
 <picture>
-<img align="left" src="https://github.com/nuztalgia/taterbot/blob/main/taterbot/assets/potato-purple-heart.png" width=48>
+<img align="left" src="https://raw.githubusercontent.com/nuztalgia/taterbot/main/taterbot/assets/potato-purple-heart.png" width=48>
 </picture>
 
 **Tato** is the mascot of the [**Lost in Potato**](https://discord.gg/tato)

@@ -1,6 +1,6 @@
 <h1>
 <picture>
-<img src="https://github.com/nuztalgia/taterbot/blob/main/taterbot/assets/potato-purple-heart.png" width=32>
+<img src="https://raw.githubusercontent.com/nuztalgia/taterbot/main/taterbot/assets/potato-purple-heart.png" width=32>
 </picture>
 TaterBot
 </h1>
