@@ -2,8 +2,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Final
 
-import discord
 from botstrap import Color
+from discord import ApplicationContext, Bot, Embed, Emoji, Guild, TextChannel, User
+from discord.abc import GuildChannel
+from discord.enums import ButtonStyle, ChannelType
+from discord.errors import Forbidden
+from discord.flags import Intents
+from uikitty import dynamic_select
 
 from taterbot import utils
 from taterbot.config import Config
@@ -11,15 +16,15 @@ from taterbot.log import Log
 
 
 # noinspection PyDunderSlots, PyUnresolvedReferences
-def _get_required_intents() -> discord.Intents:
-    intents = discord.Intents.default()
+def _get_required_intents() -> Intents:
+    intents = Intents.default()
     intents.members = True
     intents.message_content = True
     return intents
 
 
 # noinspection PyAbstractClass
-class TaterBot(discord.Bot):
+class TaterBot(Bot):
     def __init__(self, force_sync: bool, **options: Any) -> None:
         super().__init__(
             intents=_get_required_intents(),
@@ -27,13 +32,13 @@ class TaterBot(discord.Bot):
             **options,
         )
 
-        self.owner: discord.User = self.get_user(self.owner_id)
-        self.home_guild: discord.Guild = self.get_guild(Config.home_id)
-        self.emoji: discord.Emoji = self.get_emoji(Config.emoji_id)
+        self.owner: User = self.get_user(self.owner_id)
+        self.home_guild: Guild = self.get_guild(Config.home_id)
+        self.emoji: Emoji = self.get_emoji(Config.emoji_id)
 
-        self.known_channels: Final[dict[str, discord.abc.GuildChannel]] = {}
-        self.known_users: Final[dict[str, discord.User]] = {}
-        self.started_at: Final[datetime] = discord.utils.utcnow()
+        self.known_channels: Final[dict[str, GuildChannel]] = {}
+        self.known_users: Final[dict[str, User]] = {}
+        self.started_at: Final[datetime] = utils.utcnow()
 
         self._force_sync: Final[bool] = force_sync
         self._initialized: bool = False
@@ -42,20 +47,38 @@ class TaterBot(discord.Bot):
             Log.d(f"Loading extension '{file_path.stem}'.")
             self.load_extension(f"taterbot.cogs.{file_path.stem}")
 
-    def create_branded_embed(self, **kwargs: Any) -> discord.Embed:
+    def create_branded_embed(self, **kwargs: Any) -> Embed:
         color = utils.get_color_value(Config.accent_color)
         return utils.create_embed_for_author(self.user, color=color, **kwargs)
 
     def get_channel_keys(
-        self, *allowed_types: type[discord.abc.GuildChannel], exclude_id: int = 0
+        self, *allowed_types: type[GuildChannel], exclude_id: int = 0
     ) -> list[str]:
         if not allowed_types:
-            allowed_types = (discord.abc.GuildChannel,)
+            allowed_types = (GuildChannel,)
         return [
             channel_key
             for channel_key, channel in self.known_channels.items()
             if (isinstance(channel, allowed_types) and (channel.id != exclude_id))
         ]
+
+    async def get_text_channel(
+        self,
+        ctx: ApplicationContext,
+        prompt: str = "Select a channel:",
+        exclude_current_channel: bool = True,
+        ephemeral: bool = True,
+        button_style: ButtonStyle = ButtonStyle.primary,
+    ) -> TextChannel | None:
+        exclude_id = ctx.channel.id if exclude_current_channel else 0
+        keys = self.get_channel_keys(TextChannel, exclude_id=exclude_id)
+
+        await ctx.response.defer(ephemeral=ephemeral)
+        selected_channel_key = await dynamic_select(
+            ctx, *keys, content=prompt, button_style=button_style, log=Log.d
+        )
+        channel = self.known_channels.get(selected_channel_key)
+        return channel if isinstance(channel, TextChannel) else None
 
     def log_attributes(self, prefix: str = "  - ") -> None:
         loggable_home_guild = self.home_guild.name + Color.grey(
@@ -111,7 +134,7 @@ class TaterBot(discord.Bot):
                 Log.d(f"Fetching known channel '{channel_key}'.")
                 channel = await self.fetch_channel(channel_id)
             self.known_channels[channel_key] = channel
-        except discord.errors.Forbidden:
+        except Forbidden:
             Log.w(f"Missing access to channel '{channel_key}'.")
 
     async def _cache_user(self, user_key: str, user_id: int) -> None:
@@ -136,11 +159,11 @@ class TaterBot(discord.Bot):
         self.log_attributes()
 
     # noinspection PyMethodMayBeStatic
-    async def on_application_command(self, ctx: discord.ApplicationContext) -> None:
+    async def on_application_command(self, ctx: ApplicationContext) -> None:
         command_name = ctx.command.qualified_name
         channel_name = (
             "their DMs"
-            if (ctx.channel.type == discord.ChannelType.private)
+            if (ctx.channel.type == ChannelType.private)
             else utils.get_channel_loggable_name(ctx.channel)
         )
         Log.i(f"{ctx.user} used command '{command_name}' in {channel_name}.")

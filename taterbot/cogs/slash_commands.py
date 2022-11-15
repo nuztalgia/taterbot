@@ -3,9 +3,9 @@ from string import Template
 from typing import Final
 
 import emoji
-from discord import ApplicationContext, ButtonStyle, Cog, Forbidden, TextChannel
+from discord import ApplicationContext, Cog, TextChannel
 from discord.commands import option, slash_command
-from uikitty import dynamic_select
+from discord.errors import Forbidden
 
 from taterbot import Config, Log, TaterBot, utils
 
@@ -89,9 +89,12 @@ class SlashCommands(Cog):
             return
 
         if message:
+            channel = await self.bot.get_text_channel(
+                ctx, prompt="Where should I send your goodbye message?", ephemeral=False
+            )
             message_delivered = False
 
-            if channel := await self._get_signoff_channel(ctx):
+            if channel:
                 message_delivered = await self._announce_signoff(ctx, channel, message)
             else:
                 Log.e(f"A signoff message was provided, but no channels are available.")
@@ -110,17 +113,6 @@ class SlashCommands(Cog):
 
         Log.i(f"Logging out and shutting down.")
         await self.bot.close()
-
-    async def _get_signoff_channel(self, ctx: ApplicationContext) -> TextChannel | None:
-        selected_channel_key = await dynamic_select(
-            ctx,
-            *self.bot.get_channel_keys(TextChannel, exclude_id=ctx.channel.id),
-            content=f"Which channel should I send your goodbye message to?",
-            button_style=ButtonStyle.primary,
-            log=Log.d,
-        )
-        channel = self.bot.known_channels.get(selected_channel_key)
-        return channel if isinstance(channel, TextChannel) else None
 
     async def _announce_signoff(
         self,
