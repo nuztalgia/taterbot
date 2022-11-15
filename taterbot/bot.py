@@ -4,9 +4,9 @@ from typing import Any, Final
 import discord
 from botstrap import Color
 
+from taterbot import utils
 from taterbot.config import Config
 from taterbot.log import Log
-from taterbot.utils import get_loggable_channel_name
 
 
 # noinspection PyDunderSlots, PyUnresolvedReferences
@@ -40,12 +40,27 @@ class TaterBot(discord.Bot):
             Log.d(f"Loading extension '{file_path.stem}'.")
             self.load_extension(f"taterbot.cogs.{file_path.stem}")
 
+    def create_branded_embed(self, **kwargs: Any) -> discord.Embed:
+        color = utils.get_color_value(Config.accent_color)
+        return utils.create_embed_for_author(self.user, color=color, **kwargs)
+
+    def get_channel_keys(
+        self, *allowed_types: type[discord.abc.GuildChannel], exclude_id: int = 0
+    ) -> list[str]:
+        if not allowed_types:
+            allowed_types = (discord.abc.GuildChannel,)
+        return [
+            channel_key
+            for channel_key, channel in self.known_channels.items()
+            if (isinstance(channel, allowed_types) and (channel.id != exclude_id))
+        ]
+
     def log_attributes(self, prefix: str = "  - ") -> None:
         loggable_home_guild = self.home_guild.name + Color.grey(
             f" (Members: {self.home_guild.approximate_member_count})"
         )
         loggable_channels = {
-            key: get_loggable_channel_name(channel)
+            key: utils.get_channel_loggable_name(channel)
             for key, channel in self.known_channels.items()
         }
         loggable_users = {key: str(user) for key, user in self.known_users.items()}
@@ -124,6 +139,6 @@ class TaterBot(discord.Bot):
         channel_name = (
             "their DMs"
             if (ctx.channel.type == discord.ChannelType.private)
-            else get_loggable_channel_name(ctx.channel)
+            else utils.get_channel_loggable_name(ctx.channel)
         )
         Log.i(f"{ctx.user} used command '{command_name}' in {channel_name}.")

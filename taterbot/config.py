@@ -6,6 +6,8 @@ from typing import Any, Final
 
 @dataclass(kw_only=True)
 class _Config:
+    about_message: str = ""
+    accent_color: str = ""
     owner_id: int = 0
     home_id: int = 0
     emoji_id: int = 0

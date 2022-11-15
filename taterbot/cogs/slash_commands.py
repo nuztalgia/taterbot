@@ -1,7 +1,7 @@
 from typing import Final
 
-from discord import ApplicationContext, ButtonStyle, Cog, option, slash_command
-from discord.abc import Messageable
+from discord import ApplicationContext, ButtonStyle, Cog, Forbidden, TextChannel
+from discord.commands import option, slash_command
 from discord.utils import utcnow
 from uikitty import dynamic_select
 
@@ -44,15 +44,20 @@ class SlashCommands(Cog):
             return
 
         if message:
-            other_channel_keys = [
-                channel_key
-                for channel_key, channel in self.bot.known_channels.items()
-                if channel.id != ctx.channel.id
-            ]
-            if other_channel_keys:
-                await self._announce_signoff(ctx, message, other_channel_keys)
+            message_delivered = False
+
+            if channel := await self._get_signoff_channel(ctx):
+                message_delivered = await self._announce_signoff(ctx, channel, message)
             else:
-                Log.d("There are no channels available for announcing signoff.")
+                Log.e(f"A signoff message was provided, but no channels are available.")
+                error_embed = utils.create_error_embed(
+                    "Umm... I don't know where to send your goodbye message.\nPlease "
+                    "update my `channels`, or run `/signoff` again without a message!"
+                )
+                await utils.edit_or_respond(ctx, embed=error_embed)
+
+            if not message_delivered:
+                return
 
         send_final_message = ctx.channel.send if ctx.response.is_done() else ctx.respond
         content = f"Signing off. Bye for now, {self.bot.owner.mention} {self.bot.emoji}"
@@ -61,41 +66,51 @@ class SlashCommands(Cog):
         Log.i(f"Logging out and shutting down.")
         await self.bot.close()
 
-    async def _announce_signoff(
-        self, ctx: ApplicationContext, message: str, channel_keys: list[str]
-    ) -> None:
-        destination_channel_key = await dynamic_select(
+    async def _get_signoff_channel(self, ctx: ApplicationContext) -> TextChannel | None:
+        selected_channel_key = await dynamic_select(
             ctx,
-            *channel_keys,
+            *self.bot.get_channel_keys(TextChannel, exclude_id=ctx.channel.id),
             content=f"Which channel should I send your goodbye message to?",
             button_style=ButtonStyle.primary,
             log=Log.d,
         )
-        destination_channel = self.bot.known_channels[destination_channel_key]
-        edit_or_respond = ctx.edit if ctx.response.is_done() else ctx.respond
+        channel = self.bot.known_channels.get(selected_channel_key)
+        return channel if isinstance(channel, TextChannel) else None
 
-        display_name = utils.get_channel_display_name(destination_channel, ctx.user)
-        loggable_name = utils.get_loggable_channel_name(destination_channel)
+    async def _announce_signoff(
+        self,
+        ctx: ApplicationContext,
+        channel: TextChannel,
+        message: str,
+    ) -> bool:
+        channel_display_name = utils.get_channel_display_name(channel, ctx.user)
+        channel_loggable_name = utils.get_channel_loggable_name(channel)
 
-        if isinstance(destination_channel, Messageable):
-            Log.d(f"Delivering a goodbye message to {loggable_name}.")
+        try:
+            Log.i(f"Delivering a goodbye message to {channel_loggable_name}.")
 
-            # noinspection PyTypeChecker
-            embed = utils.create_embed_for_author(
-                self.bot.user,
+            embed = self.bot.create_branded_embed(
                 description=f"> {message}",
                 header_template="$user is signing off!",
                 timestamp=utcnow(),
             ).set_footer(text=f"—  {self.bot.owner}")
 
-            await destination_channel.send(embed=embed)
-            success_message = f"Delivered this message to {display_name}."
-            await edit_or_respond(content=success_message, embed=embed, view=None)
-        else:
-            error_message = f"Selected channel ({display_name}) is not messageable."
-            await edit_or_respond(
-                content=None, embed=utils.create_error_embed(error_message), view=None
+            await channel.send(embed=embed)
+        except Forbidden:
+            Log.e(f"Missing permission(s) to send message to {channel_loggable_name}.")
+            error_embed = utils.create_error_embed(
+                f"I'm not allowed to send messages in {channel_display_name}.\n"
+                "Please make sure I have the correct permissions, then try again!"
             )
+            await utils.edit_or_respond(ctx, embed=error_embed)
+            return False
+
+        await utils.edit_or_respond(
+            ctx,
+            content=f"I delivered your message to {channel_display_name}:",
+            embed=embed,
+        )
+        return True
 
 
 def setup(bot: TaterBot) -> None:
