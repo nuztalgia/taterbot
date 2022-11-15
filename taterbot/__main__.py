@@ -26,7 +26,7 @@ def main() -> int:
     )
     botstrap.run_bot(
         bot_class="taterbot.bot.TaterBot",
-        activity=Activity(type=ActivityType.listening, name="@TaterBot"),
+        activity=Activity(type=ActivityType.listening, name="/about"),
         force_sync=args.force_sync,
     )
     return 0

@@ -1,13 +1,16 @@
 import functools
 import re
 from collections.abc import Callable
+from datetime import datetime
 from string import Template
 from typing import Any, Final
 
 import emoji
+import humanize
 from discord import ApplicationContext, ClientUser, Color, Embed, File, Message, User
 from discord.abc import GuildChannel
 from discord.ui import View
+from discord.utils import utcnow
 
 _NO_COLOR: Final[int] = -1
 
@@ -80,6 +83,24 @@ async def edit_or_respond(
 ) -> None:
     func = ctx.edit if ctx.response.is_done() else ctx.respond
     await func(content=content, embed=embed, view=view)
+
+
+def format_time(
+    time: datetime,
+    *,
+    show_timestamp: bool = True,
+    show_elapsed: bool = True,
+) -> str:
+    results = []
+
+    if show_timestamp:
+        results.append(f"<t:{int(time.timestamp())}>")
+
+    if show_elapsed:
+        elapsed_time = humanize.naturaltime(utcnow() - time)
+        results.append(f"({elapsed_time})" if results else elapsed_time)
+
+    return " ".join(results)
 
 
 def get_asset_file(file_name: str) -> File:

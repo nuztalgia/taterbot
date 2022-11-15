@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Final
 
@@ -32,6 +33,7 @@ class TaterBot(discord.Bot):
 
         self.known_channels: Final[dict[str, discord.abc.GuildChannel]] = {}
         self.known_users: Final[dict[str, discord.User]] = {}
+        self.started_at: Final[datetime] = discord.utils.utcnow()
 
         self._force_sync: Final[bool] = force_sync
         self._initialized: bool = False

@@ -1,16 +1,53 @@
+from string import Template
 from typing import Final
 
+import emoji
 from discord import ApplicationContext, ButtonStyle, Cog, Forbidden, TextChannel
 from discord.commands import option, slash_command
-from discord.utils import utcnow
 from uikitty import dynamic_select
 
 from taterbot import Config, Log, TaterBot, utils
+
+_ABOUT_FUNCTIONALITY: Final[Template] = Template(
+    "I deliver messages to/from ${bot_owner}, but only when I'm **online** and told to "
+    "do so. To let me know that I should pass a message along, you can directly mention"
+    " me (${bot_user}) in it, or right-click on it and select `Apps > Forward Message`."
+)
+_ABOUT_TIMEKEEPING: Final[Template] = Template(
+    "I've currently been **online** since ${formatted_start_time}."
+)
+_ABOUT_SOURCE_CODE: Final[str] = (
+    "I'm open-source! Check out my code and documentation on "
+    "[GitHub](https://github.com/nuztalgia/taterbot)."
+)
 
 
 class SlashCommands(Cog):
     def __init__(self, bot: TaterBot) -> None:
         self.bot: Final[TaterBot] = bot
+
+    @slash_command(description="Show information about this bot.")
+    async def about(self, ctx: ApplicationContext) -> None:
+        embed = self.bot.create_branded_embed(
+            description=Config.about_message,
+            header_template="Hello there! My name is $user.",
+        )
+        fields = {
+            ":postbox: FUNCTIONALITY": _ABOUT_FUNCTIONALITY.substitute(
+                bot_owner=self.bot.owner.mention,
+                bot_user=self.bot.user.mention,
+            ),
+            ":alarm_clock: TIMEKEEPING": _ABOUT_TIMEKEEPING.substitute(
+                formatted_start_time=utils.format_time(self.bot.started_at),
+            ),
+            ":construction_site: SOURCE CODE": _ABOUT_SOURCE_CODE,
+        }
+
+        for field_name, field_value in fields.items():
+            formatted_name = f"\n** **\n{emoji.emojize(field_name)}"
+            embed.add_field(name=formatted_name, value=field_value, inline=False)
+
+        await ctx.respond(embed=embed)
 
     @slash_command(description="Make fetch happen.")
     async def fetch(self, ctx: ApplicationContext) -> None:
@@ -92,7 +129,7 @@ class SlashCommands(Cog):
             embed = self.bot.create_branded_embed(
                 description=f"> {message}",
                 header_template="$user is signing off!",
-                timestamp=utcnow(),
+                timestamp=utils.utcnow(),
             ).set_footer(text=f"—  {self.bot.owner}")
 
             await channel.send(embed=embed)
