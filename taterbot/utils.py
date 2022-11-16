@@ -7,7 +7,7 @@ from typing import Any, Final
 
 import emoji
 import humanize
-from discord import ApplicationContext, Color, Embed, File, Member, Message
+from discord import ApplicationContext, ChannelType, Color, Embed, File, Member, Message
 from discord.abc import GuildChannel
 from discord.ui import View
 from discord.user import ClientUser, User
@@ -116,7 +116,7 @@ def get_asset_file(file_name: str) -> File:
 
 def get_channel_display_name(
     channel: GuildChannel,
-    user: User | None,
+    user: Member | User | None,
     *,
     allow_mention: bool = True,
     bold_text: bool = True,
@@ -132,9 +132,12 @@ def get_channel_display_name(
 
 
 def get_channel_loggable_name(channel: GuildChannel) -> str:
-    return get_channel_display_name(
-        channel, user=None, allow_mention=False, bold_text=False
-    )
+    if channel.type == ChannelType.private:
+        return "a direct message"
+    else:
+        return get_channel_display_name(
+            channel, user=None, allow_mention=False, bold_text=False
+        )
 
 
 def get_color_value(color: str) -> int:

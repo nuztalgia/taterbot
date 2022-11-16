@@ -32,6 +32,10 @@ target-version = ["py310"]
 [tool.isort]
 profile = "black"
 
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D1"
+
 [tool.setuptools]
 packages = ["taterbot", "taterbot.assets", "taterbot.cogs"]
 

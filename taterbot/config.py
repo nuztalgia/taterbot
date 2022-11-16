@@ -29,7 +29,7 @@ class _Config:
             raise IsADirectoryError(error_message)
 
         if self._file_path.suffix != ".json":
-            raise ValueError(f"Config file path must end in '.json'.")
+            raise ValueError(f"Config path ({self._file_path}) must end in '.json'.")
 
         if self._file_path.exists():
             file_data = json.loads(self._file_path.read_text())

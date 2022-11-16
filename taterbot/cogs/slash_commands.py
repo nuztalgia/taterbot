@@ -55,7 +55,6 @@ class SlashCommands(Cog):
             description=Config.about_message,
             header_template="Hello there! My name is $user.",
         )
-
         for title, description in self._about:
             embed.add_field(name=title, value=description, inline=False)
 
@@ -102,7 +101,7 @@ class SlashCommands(Cog):
             if channel:
                 message_delivered = await self._announce_signoff(ctx, channel, message)
             else:
-                Log.e(f"A signoff message was provided, but no channels are available.")
+                Log.e("A signoff message was provided, but no channels are available.")
                 error_embed = utils.create_error_embed(
                     "Umm... I don't know where to send your goodbye message.\nPlease "
                     "update my `channels`, or run `/signoff` again without a message!"
@@ -116,7 +115,7 @@ class SlashCommands(Cog):
         content = f"Signing off. Bye for now, {self.bot.owner.mention} {self.bot.emoji}"
         await send_final_message(content=content)
 
-        Log.i(f"Logging out and shutting down.")
+        Log.i("Logging out and shutting down.")
         await self.bot.close()
 
     async def _announce_signoff(

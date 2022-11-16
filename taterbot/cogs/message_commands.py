@@ -28,30 +28,33 @@ class MessageCommands(Cog):
             Log.d("Will not forward a message that was originally sent by this bot.")
             return
 
-        fwd = Forwarder(self.bot, ctx, message)
+        forwarder = Forwarder(self.bot, message, ctx)
+        is_in_home_guild = ctx.guild_id == self.bot.home_guild.id
 
-        if fwd.is_in_private_channel:
-            if not fwd.is_from_owner:
+        if is_in_home_guild or (not ctx.guild):
+            if ctx.user.id != self.bot.owner_id:
                 Log.d("Refusing to let non-owner forward message from DM / home guild.")
                 user, owner = ctx.user.mention, f"<@{self.bot.owner_id}>"
                 await ctx.respond(f"Sorry {user}, I only answer to {owner}! :innocent:")
                 return
 
             await ctx.defer(ephemeral=True)
-            source_text = "in home guild" if fwd.is_in_home_guild else "via DM"
-            Log.d(f"Received command from bot owner {source_text}. Forwarding message.")
+            source_text = "in home guild" if is_in_home_guild else "via DM"
+            Log.i(f"Received command from bot owner {source_text}. Forwarding message.")
 
             prompt = "To which channel should I forward this message?"
-            fwd.set_destination(await self.bot.get_text_channel(ctx, prompt=prompt))
+            forwarder.set_destination(
+                await self.bot.get_text_channel(ctx, prompt=prompt)
+            )
         else:
             time_delta = utils.utcnow() - message.created_at
             await ctx.defer(ephemeral=time_delta < timedelta(seconds=60 * 5))
 
-            Log.d("Received command in external guild. Forwarding message to owner.")
-            fwd.set_destination(self.bot.owner.dm_channel)
+            Log.i("Received command in external guild. Forwarding message to owner.")
+            forwarder.set_destination(self.bot.owner.dm_channel)
 
         try:
-            await fwd.execute()
+            await forwarder.execute()
         except Forwarder.DestinationError:
             Log.e("Could not determine a destination channel for the message.")
             await ctx.respond(embed=channel_error_embed)

@@ -12,17 +12,13 @@ class Forwarder:
     def __init__(
         self,
         bot: TaterBot,
-        ctx: ApplicationContext,
         message: Message,
+        ctx: ApplicationContext,
     ) -> None:
         self.ctx: Final[ApplicationContext] = ctx
         self.message: Final[Message] = message
         self.success_emoji: Final[Emoji] = bot.emoji
         self.embed_color: Final[int] = message.author.color.value or bot.color_value
-
-        self.is_from_owner: Final[bool] = ctx.user.id == bot.owner_id
-        self.is_in_home_guild: Final[bool] = ctx.guild_id == bot.home_guild.id
-        self.is_in_private_channel: Final[bool] = self.is_in_home_guild or not ctx.guild
 
         create_embed = functools.partial(utils.create_embed_for_message, message)
         self.embed_for_destination: Final[Embed] = create_embed(link=False)

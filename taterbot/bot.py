@@ -6,7 +6,7 @@ from typing import Any, Final
 from botstrap import Color
 from discord import ApplicationContext, Bot, Embed, Emoji, Guild, TextChannel, User
 from discord.abc import GuildChannel
-from discord.enums import ButtonStyle, ChannelType
+from discord.enums import ButtonStyle
 from discord.errors import Forbidden
 from discord.flags import Intents
 from uikitty import dynamic_select
@@ -166,15 +166,11 @@ class TaterBot(Bot):
         await self.make_fetch_happen()
         self._initialized = True
 
-        Log.i(f"TaterBot is online and ready!")
+        Log.i("TaterBot is online and ready!")
         self.log_attributes()
 
     # noinspection PyMethodMayBeStatic
     async def on_application_command(self, ctx: ApplicationContext) -> None:
         command_name = ctx.command.qualified_name
-        channel_name = (
-            "their DMs"
-            if (ctx.channel.type == ChannelType.private)
-            else utils.get_channel_loggable_name(ctx.channel)
-        )
+        channel_name = utils.get_channel_loggable_name(ctx.channel)
         Log.i(f"{ctx.user} used command '{command_name}' in {channel_name}.")
