@@ -1,13 +1,13 @@
-import functools
 import re
 from collections.abc import Callable
 from datetime import datetime
+from functools import partial
 from string import Template
 from typing import Any, Final
 
 import emoji
 import humanize
-from discord import ApplicationContext, ChannelType, Color, Embed, File, Member, Message
+from discord import ApplicationContext, ChannelType, Color, Embed, File, Member
 from discord.abc import GuildChannel
 from discord.ui import View
 from discord.user import ClientUser, User
@@ -15,7 +15,7 @@ from discord.utils import utcnow
 
 NO_COLOR: Final[int] = -1
 
-_sanitize_channel_name: Final[Callable[[str], str]] = functools.partial(
+_sanitize_channel_name: Final[Callable[[str], str]] = partial(
     re.compile(r"(:[\w-]+:|^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$)", re.ASCII).sub, ""
 )
 
@@ -54,16 +54,6 @@ def create_embed_for_author(
         name=Template(header_template).substitute(user=user.display_name),
         url=header_link_url or Embed.Empty,
         icon_url=user.avatar.url,
-    )
-
-
-def create_embed_for_message(message: Message, /, *, link: bool = True) -> Embed:
-    return create_embed_for_author(
-        message.author,
-        description=message.content,
-        header_template="Message from $user",
-        header_link_url=message.jump_url if link else None,
-        timestamp=message.created_at,
     )
 
 
@@ -149,32 +139,3 @@ def get_color_value(color: str) -> int:
         return getattr(Color, color).value
     else:
         return min(abs(int(color, 16)), 0xFFFFFF)
-
-
-def get_embeds_from_message(
-    message: Message, /, color: Color | int = NO_COLOR
-) -> list[Embed]:
-    embeds = []
-    unset_colors = (NO_COLOR, Embed.Empty)
-    should_set_colors = color not in unset_colors
-
-    for sticker in message.stickers:
-        sticker_embed = create_embed(
-            title=f"{sticker.name} (Sticker)", color=color
-        ).set_image(url=sticker.url)
-        embeds.append(sticker_embed)
-
-    for embed in message.embeds:
-        if should_set_colors and (embed.color in unset_colors):
-            embed.colour = color  # `embed.color` is a read-only property.
-        embeds.append(embed)
-
-    embeds.extend(message.embeds)
-    return embeds
-
-
-async def get_files_from_message(message: Message, /) -> list[File]:
-    return [
-        (await attachment.to_file(use_cached=True))
-        for attachment in message.attachments
-    ]
