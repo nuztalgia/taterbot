@@ -1,11 +1,14 @@
+from collections.abc import Callable, Coroutine
 from functools import cached_property
-from typing import Final
+from typing import Any, Final, TypeAlias
 
-from discord import ApplicationContext, Embed, Emoji, File, Member, Message, User
+from discord import ApplicationContext, Embed, File, Member, Message, User
 from discord.channel import DMChannel, TextChannel
 
 from taterbot import utils
 from taterbot.bot import TaterBot
+
+_SuccessCallback: TypeAlias = Callable[[Message], Coroutine[Any, Any, None]]
 
 
 class Forwarder:
@@ -20,7 +23,7 @@ class Forwarder:
         self.user: Final[Member | User] = (ctx and ctx.user) or message.author
         self.src_channel_id: Final[int] = (ctx and ctx.channel.id) or message.channel.id
         self.embed_color: Final[int] = message.author.color.value or bot.color_value
-        self.success_emoji: Final[Emoji] = bot.emoji
+        self.on_success: Final[_SuccessCallback] = bot.on_message_forwarded
 
         self.embed_for_dst: Final[Embed] = self._create_embed_for_message()
         self.embed_for_src: Final[Embed] = self._create_embed_for_message(link=True)
@@ -108,7 +111,7 @@ class Forwarder:
                 files=await self._get_files_from_message(),
             )
 
-        await self.message.add_reaction(self.success_emoji)
+        await self.on_success(self.message)
 
     async def _get_files_from_message(self) -> list[File]:
         return [

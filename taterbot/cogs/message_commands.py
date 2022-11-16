@@ -11,6 +11,10 @@ message_error_embed: Final[Embed] = utils.create_error_embed(
     description="Why do you want me to forward my own message?"
     "\nYou're making me feel self-conscious! :flushed:",
 )
+reaction_error_embed: Final[Embed] = utils.create_error_embed(
+    title="I already forwarded that message!",
+    description="(You can tell by the reaction I added to it.)",
+)
 channel_error_embed: Final[Embed] = utils.create_error_embed(
     "Ummm... I couldn't figure out where to deliver that message."
     "\nPlease update my `channels`, then try forwarding it again!"
@@ -28,14 +32,21 @@ class MessageCommands(Cog):
             Log.d("Will not forward a message that was originally sent by this bot.")
             return
 
+        for reaction in message.reactions:
+            reaction_user_ids = [user.id for user in await reaction.users().flatten()]
+            if self.bot.user.id in reaction_user_ids:  # reaction.me wasn't consistent.
+                await ctx.respond(embed=reaction_error_embed, ephemeral=True)
+                Log.d("Will not forward a message that has this bot's reaction on it.")
+                return
+
         forwarder = Forwarder(self.bot, message, ctx)
         is_in_home_guild = ctx.guild_id == self.bot.home_guild.id
 
         if is_in_home_guild or (not ctx.guild):
             if ctx.user.id != self.bot.owner_id:
-                Log.d("Refusing to let non-owner forward message from DM / home guild.")
                 user, owner = ctx.user.mention, f"<@{self.bot.owner_id}>"
                 await ctx.respond(f"Sorry {user}, I only answer to {owner}! :innocent:")
+                Log.d("Refusing to let non-owner forward message from DM / home guild.")
                 return
 
             await ctx.defer(ephemeral=True)
@@ -58,8 +69,6 @@ class MessageCommands(Cog):
         except Forwarder.DestinationError:
             Log.e("Could not determine a destination channel for the message.")
             await ctx.respond(embed=channel_error_embed)
-        else:
-            Log.d("Successfully forwarded the message.")
 
 
 def setup(bot: TaterBot) -> None:

@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Any, Final
 
 from botstrap import Color
-from discord import ApplicationContext, Bot, Embed, Emoji, Guild, TextChannel, User
+from discord import Bot, Embed, Emoji, Guild, Message, TextChannel, User
 from discord.abc import GuildChannel
+from discord.commands import ApplicationContext
 from discord.enums import ButtonStyle
 from discord.errors import Forbidden
 from discord.flags import Intents
@@ -43,10 +44,16 @@ class TaterBot(Bot):
 
         self._force_sync: Final[bool] = force_sync
         self._initialized: bool = False
+        self._messages_forwarded: int = 0
 
         for file_path in Path(__file__).parent.glob("cogs/[!_]*.py"):
             Log.d(f"Loading extension '{file_path.stem}'.")
             self.load_extension(f"taterbot.cogs.{file_path.stem}")
+
+    @property
+    def messages_forwarded(self) -> str:
+        plural = self._messages_forwarded != 1
+        return f"**{self._messages_forwarded}** message{'s' if plural else ''}"
 
     @cached_property
     def color_value(self) -> int:
@@ -154,6 +161,17 @@ class TaterBot(Bot):
             user = await self.fetch_user(user_id)
         self.known_users[f"@{user_key}"] = user
 
+    # noinspection PyMethodMayBeStatic
+    async def on_application_command(self, ctx: ApplicationContext) -> None:
+        command_name = ctx.command.qualified_name
+        channel_name = utils.get_channel_loggable_name(ctx.channel)
+        Log.i(f"{ctx.user} used command '{command_name}' in {channel_name}.")
+
+    async def on_message_forwarded(self, message: Message) -> None:
+        await message.add_reaction(self.emoji)
+        Log.d(f"Successfully forwarded message {message.id}.")
+        self._messages_forwarded += 1
+
     async def on_ready(self) -> None:
         if self._initialized:
             Log.i("Received another 'on_ready' event. Ignoring.")
@@ -168,9 +186,3 @@ class TaterBot(Bot):
 
         Log.i("TaterBot is online and ready!")
         self.log_attributes()
-
-    # noinspection PyMethodMayBeStatic
-    async def on_application_command(self, ctx: ApplicationContext) -> None:
-        command_name = ctx.command.qualified_name
-        channel_name = utils.get_channel_loggable_name(ctx.channel)
-        Log.i(f"{ctx.user} used command '{command_name}' in {channel_name}.")

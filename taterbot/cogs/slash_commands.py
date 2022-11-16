@@ -2,7 +2,6 @@ from functools import cached_property
 from string import Template
 from typing import Final
 
-import emoji
 from discord import ApplicationContext, Cog, TextChannel
 from discord.commands import option, slash_command
 from discord.errors import Forbidden
@@ -10,16 +9,21 @@ from discord.errors import Forbidden
 from taterbot import Config, Log, TaterBot, utils
 
 _ABOUT: Final[list[tuple[str, Template]]] = [
-    (f"\n** **\n{emoji.emojize(title_emoji)}\u2009\u2002{title_text}", description)
+    (
+        f"\n** **\n{utils.emoji.emojize(title_emoji)}\u2009\u2002{title_text}",
+        description,
+    )
     for (title_emoji, title_text), description in {
         (":postbox:", "What I Do"): Template(
             "I deliver messages to/from ${bot_owner}, but only when I'm **online** and "
             "told to do so. To let me know that I should pass a message along, you can "
             "directly mention me (${bot_user}) in it, or right-click on it and select "
-            "`Apps > Forward Message`."
+            "`Apps > Forward Message`.\n\nIf you see a ${bot_emoji} reaction from me, "
+            "then the message was successfully delivered!"
         ),
         (":alarm_clock:", "When I Woke Up"): Template(
-            "I've currently been **online** since ${start_time}."
+            "I've currently been **online** since ${start_time}.\nDuring this session, "
+            "I've carried a total of ${messages_forwarded} back and forth."
         ),
         (":construction_site:", "How I Work"): Template(
             "I'm completely open-source! Check out my code and documentation on "
@@ -42,6 +46,7 @@ class SlashCommands(Cog):
         kwargs = {
             "bot_owner": self.bot.owner.mention,
             "bot_user": self.bot.user.mention,
+            "bot_emoji": self.bot.emoji,
             "start_time": utils.format_time(self.bot.started_at),
         }
         return [
@@ -53,10 +58,11 @@ class SlashCommands(Cog):
     async def about(self, ctx: ApplicationContext) -> None:
         embed = self.bot.create_branded_embed(
             description=Config.about_message,
-            header_template="Hello there! My name is $user.",
+            header_template=f"Hello, {ctx.user.display_name}! My name is $user.",
         )
-        for title, description in self._about:
-            embed.add_field(name=title, value=description, inline=False)
+        for name, value in self._about:
+            value = value.replace("${messages_forwarded}", self.bot.messages_forwarded)
+            embed.add_field(name=name, value=value, inline=False)
 
         await ctx.respond(embed=embed)
         Log.d(f"Successfully displayed information about {self.bot.user}.")
