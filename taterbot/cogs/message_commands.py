@@ -54,7 +54,7 @@ class MessageCommands(Cog):
             forwarder.set_destination(self.bot.owner.dm_channel)
 
         try:
-            await forwarder.execute()
+            await forwarder.execute(ctx)
         except Forwarder.DestinationError:
             Log.e("Could not determine a destination channel for the message.")
             await ctx.respond(embed=channel_error_embed)
