@@ -1,4 +1,5 @@
 from datetime import datetime
+from functools import cached_property
 from pathlib import Path
 from typing import Any, Final
 
@@ -47,9 +48,20 @@ class TaterBot(Bot):
             Log.d(f"Loading extension '{file_path.stem}'.")
             self.load_extension(f"taterbot.cogs.{file_path.stem}")
 
-    def create_branded_embed(self, **kwargs: Any) -> Embed:
+    @cached_property
+    def color_value(self) -> int:
         color = utils.get_color_value(Config.accent_color)
-        return utils.create_embed_for_author(self.user, color=color, **kwargs)
+        if color != utils.NO_COLOR:
+            return color
+        elif accent_color := self.user.accent_color:
+            return accent_color.value
+        else:
+            return utils.NO_COLOR
+
+    def create_branded_embed(self, **kwargs: Any) -> Embed:
+        if "color" not in kwargs:
+            kwargs["color"] = self.color_value
+        return utils.create_embed_for_author(self.user, **kwargs)
 
     def get_channel_keys(
         self, *allowed_types: type[GuildChannel], exclude_id: int = 0
@@ -97,11 +109,12 @@ class TaterBot(Bot):
         ]:
             Log.i(f"{Color.cyan(f'{prefix}{attribute_name}:')} {attribute_value}")
 
-    # noinspection PyProtectedMember
+    # noinspection PyPropertyAccess, PyProtectedMember
     async def make_fetch_happen(self) -> None:
         if self._initialized:
             Log.d(f"Reloading config from '{Config._file_path}'.")
             Config.reload_from_file()
+            del self.color_value  # Invalidate the cached property.
         else:
             Log.d(f"Loaded config from '{Config._file_path}'.")
 

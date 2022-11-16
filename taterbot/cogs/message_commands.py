@@ -1,4 +1,5 @@
 import functools
+from datetime import timedelta
 from typing import Final
 
 from discord import ApplicationContext, Cog, Embed, Emoji, Message
@@ -30,7 +31,6 @@ class MessageCommands(Cog):
             return
 
         cmd = _ForwardMessageCommand(self.bot, ctx, message)
-        await ctx.defer()
 
         if cmd.is_in_private_channel:
             if not cmd.is_from_owner:
@@ -39,12 +39,16 @@ class MessageCommands(Cog):
                 await ctx.respond(f"Sorry {user}, I only answer to {owner}! :innocent:")
                 return
 
+            await ctx.defer(ephemeral=True)
             source_text = "in home guild" if cmd.is_in_home_guild else "via DM"
             Log.d(f"Received command from bot owner {source_text}. Forwarding message.")
 
             prompt = "To which channel should I forward this message?"
             cmd.set_destination(await self.bot.get_text_channel(ctx, prompt=prompt))
         else:
+            time_delta = utils.utcnow() - message.created_at
+            await ctx.defer(ephemeral=time_delta < timedelta(seconds=60 * 5))
+
             Log.d("Received command in external guild. Forwarding message to owner.")
             cmd.set_destination(self.bot.owner.dm_channel)
 
@@ -67,6 +71,7 @@ class _ForwardMessageCommand:
         self.ctx: Final[ApplicationContext] = ctx
         self.message: Final[Message] = message
         self.success_emoji: Final[Emoji] = bot.emoji
+        self.embed_color: Final[int] = message.author.color.value or bot.color_value
 
         self.is_from_owner: Final[bool] = ctx.user.id == bot.owner_id
         self.is_in_home_guild: Final[bool] = ctx.guild_id == bot.home_guild.id
@@ -88,7 +93,7 @@ class _ForwardMessageCommand:
         if isinstance(channel, TextChannel):
             channel_label = utils.get_channel_display_name(channel, self.ctx.user)
         elif isinstance(channel, DMChannel):
-            channel_label = channel.recipient
+            channel_label = channel.recipient.mention
         else:
             return
 
@@ -102,7 +107,7 @@ class _ForwardMessageCommand:
             )
 
         separate_channels = self.destination_channel.id != self.ctx.channel.id
-        message_embeds = utils.get_embeds_from_message(self.message)
+        message_embeds = utils.get_embeds_from_message(self.message, self.embed_color)
 
         if separate_channels:
             await self.destination_channel.send(
