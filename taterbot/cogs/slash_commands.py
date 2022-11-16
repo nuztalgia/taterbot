@@ -29,6 +29,10 @@ _ABOUT: Final[list[tuple[str, Template]]] = [
 ]
 
 
+async def _respond_with_gif(ctx: ApplicationContext, file_name: str) -> None:
+    await utils.edit_or_respond(ctx, file=utils.get_asset_file(f"{file_name}.gif"))
+
+
 class SlashCommands(Cog):
     def __init__(self, bot: TaterBot) -> None:
         self.bot: Final[TaterBot] = bot
@@ -56,22 +60,22 @@ class SlashCommands(Cog):
             embed.add_field(name=title, value=description, inline=False)
 
         await ctx.respond(embed=embed)
+        Log.d(f"Successfully displayed information about {self.bot.user}.")
 
     @slash_command(description="Make fetch happen.")
     async def fetch(self, ctx: ApplicationContext) -> None:
-        if ctx.user.id == self.bot.owner_id:
-            await ctx.response.defer(invisible=False)
+        if ctx.user.id != self.bot.owner_id:
+            await _respond_with_gif(ctx, "stop-trying-to-make-fetch-happen")
+            Log.d("Will not proceed with 'fetch' command from an unauthorized user.")
+            return
 
-            Log.d("Triggering a re-fetch of all custom bot attributes.")
-            await self.bot.make_fetch_happen()
+        await ctx.response.defer(invisible=False)
+        Log.d("Triggering a re-fetch of all custom bot attributes.")
+        await self.bot.make_fetch_happen()
 
-            Log.i("Successfully re-fetched all custom bot attributes.")
-            self.bot.log_attributes()
-            file_to_send = "that-is-so-fetch.gif"
-        else:
-            file_to_send = "stop-trying-to-make-fetch-happen.gif"
-
-        await ctx.respond(file=utils.get_asset_file(file_to_send))
+        await _respond_with_gif(ctx, "that-is-so-fetch")
+        Log.i("Successfully re-fetched all custom bot attributes.")
+        self.bot.log_attributes()
 
     @slash_command(
         description="Send a goodbye message and log out.",
@@ -84,13 +88,14 @@ class SlashCommands(Cog):
     )
     async def signoff(self, ctx: ApplicationContext, message: str) -> None:
         if ctx.user.id != self.bot.owner_id:
-            response_gif = utils.get_asset_file("you-think-you-can-stop-me.gif")
-            await ctx.respond(file=response_gif)
+            await _respond_with_gif(ctx, "you-think-you-can-stop-me")
+            Log.d("Will not proceed with 'signoff' command from an unauthorized user.")
             return
 
         if message:
+            await ctx.response.defer()
             channel = await self.bot.get_text_channel(
-                ctx, prompt="Where should I send your goodbye message?", ephemeral=False
+                ctx, prompt="To which channel should I send your goodbye message?"
             )
             message_delivered = False
 

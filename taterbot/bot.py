@@ -67,13 +67,11 @@ class TaterBot(Bot):
         ctx: ApplicationContext,
         prompt: str = "Select a channel:",
         exclude_current_channel: bool = True,
-        ephemeral: bool = True,
         button_style: ButtonStyle = ButtonStyle.primary,
     ) -> TextChannel | None:
         exclude_id = ctx.channel.id if exclude_current_channel else 0
         keys = self.get_channel_keys(TextChannel, exclude_id=exclude_id)
 
-        await ctx.response.defer(ephemeral=ephemeral)
         selected_channel_key = await dynamic_select(
             ctx, *keys, content=prompt, button_style=button_style, log=Log.d
         )

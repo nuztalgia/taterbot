@@ -80,9 +80,15 @@ async def edit_or_respond(
     content: str | None = None,
     embed: Embed | None = None,
     view: View | None = None,
+    **kwargs: Any,
 ) -> None:
+    embeds = [
+        _embed
+        for _embed in [embed, kwargs.pop("embed", None), *kwargs.pop("embeds", [])]
+        if isinstance(_embed, Embed)
+    ]
     func = ctx.edit if ctx.response.is_done() else ctx.respond
-    await func(content=content, embed=embed, view=view)
+    await func(content=content, embeds=embeds, view=view, **kwargs)
 
 
 def format_time(
