@@ -1,3 +1,4 @@
+import json
 import re
 from collections.abc import Callable
 from datetime import datetime
@@ -63,6 +64,18 @@ def create_error_embed(
     title: str = "Something went wrong!",
 ) -> Embed:
     return create_embed(description, title=title, color=Color.brand_red())
+
+
+def dict_to_str(
+    data: dict[str, Any],
+    value_to_string: Callable[[Any], str] = str,
+    regular_indent: int = 4,
+    newline_indent: int = 26,
+) -> str:
+    return json.dumps(
+        {key: value_to_string(value) for key, value in data.items()},
+        indent=regular_indent,
+    ).replace("\n", f"\n{' ' * newline_indent}")
 
 
 async def edit_or_respond(

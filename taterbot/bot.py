@@ -101,20 +101,21 @@ class TaterBot(Bot):
         loggable_home_guild = self.home_guild.name + Color.grey(
             f" (Members: {self.home_guild.approximate_member_count})"
         )
-        loggable_channels = {
-            key: utils.get_channel_loggable_name(channel)
-            for key, channel in self.known_channels.items()
-        }
-        loggable_users = {key: str(user) for key, user in self.known_users.items()}
+        loggable_channels = utils.dict_to_str(
+            self.known_channels, utils.get_channel_loggable_name
+        )
+        loggable_users = utils.dict_to_str(self.known_users)
 
         for attribute_name, attribute_value in [
             ("Owner", self.owner),
             ("Home Guild", loggable_home_guild),
-            ("Signature Emoji", f":{self.emoji.name}:"),
             ("Known Channels", loggable_channels),
             ("Known Users", loggable_users),
+            ("Signature Emoji", f":{self.emoji.name}:"),
         ]:
             Log.i(f"{Color.cyan(f'{prefix}{attribute_name}:')} {attribute_value}")
+
+        Log.d("Finished logging bot attributes.")
 
     # noinspection PyPropertyAccess, PyProtectedMember
     async def make_fetch_happen(self) -> None:

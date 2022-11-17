@@ -1,4 +1,3 @@
-from functools import cached_property
 from string import Template
 from typing import Final
 
@@ -41,13 +40,14 @@ class SlashCommands(Cog):
     def __init__(self, bot: TaterBot) -> None:
         self.bot: Final[TaterBot] = bot
 
-    @cached_property
+    @property
     def _about(self) -> list[tuple[str, str]]:
         kwargs = {
             "bot_owner": self.bot.owner.mention,
             "bot_user": self.bot.user.mention,
             "bot_emoji": self.bot.emoji,
             "start_time": utils.format_time(self.bot.started_at),
+            "messages_forwarded": self.bot.messages_forwarded,
         }
         return [
             (title, description.safe_substitute(**kwargs))
@@ -60,9 +60,8 @@ class SlashCommands(Cog):
             description=Config.about_message,
             header_template=f"Hello, {ctx.user.display_name}! My name is $user.",
         )
-        for name, value in self._about:
-            value = value.replace("${messages_forwarded}", self.bot.messages_forwarded)
-            embed.add_field(name=name, value=value, inline=False)
+        for title, description in self._about:
+            embed.add_field(name=title, value=description, inline=False)
 
         await ctx.respond(embed=embed)
         Log.d(f"Successfully displayed information about {self.bot.user}.")
