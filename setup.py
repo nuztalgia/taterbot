@@ -6,7 +6,7 @@ setup(
         "botstrap ==0.2.8",
         "emoji ==2.2.0",
         "humanize ==4.4.0",
-        "py-cord ==2.3.1",
+        "py-cord ==2.3.2",
     ],
     url="https://github.com/nuztalgia/taterbot",
 )
