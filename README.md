@@ -8,8 +8,8 @@ TaterBot
 [![Botstrap](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fnuztalgia%2Fbotstrap%2Fmain%2F.github%2Fbadges%2Fbotstrap-on.json&logo=0)](https://github.com/nuztalgia/botstrap)
 [![Project License](https://img.shields.io/github/license/nuztalgia/taterbot?color=blue)](https://github.com/nuztalgia/taterbot/blob/main/LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3.10-blue)](https://github.com/nuztalgia/taterbot/blob/main/pyproject.toml)
-[![Build Status](https://img.shields.io/github/workflow/status/nuztalgia/taterbot/Build)](https://github.com/nuztalgia/taterbot/actions/workflows/build.yml)
-[![CodeQL Status](https://img.shields.io/github/workflow/status/nuztalgia/taterbot/CodeQL?label=codeQL)](https://github.com/nuztalgia/taterbot/actions/workflows/codeql.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/nuztalgia/taterbot/build.yml?branch=main)](https://github.com/nuztalgia/taterbot/actions/workflows/build.yml)
+[![CodeQL Status](https://img.shields.io/github/actions/workflow/status/nuztalgia/taterbot/codeql.yml?branch=main&label=codeQL)](https://github.com/nuztalgia/taterbot/actions/workflows/codeql.yml)
 [![CodeFactor](https://img.shields.io/codefactor/grade/github/nuztalgia/taterbot/main?label=codefactor)](https://www.codefactor.io/repository/github/nuztalgia/taterbot)
 
 TaterBot is a personal Discord bot that serves as a cross-server spec**tater**
@@ -242,8 +242,8 @@ it green and healthy! 💚
 
 ## License
 
-**Source Code:** Copyright © 2022
-[Nuztalgia / Lovegood](https://github.com/nuztalgia). Released under the
+**Source Code:** Copyright © 2022-2023
+[Nuztalgia](https://github.com/nuztalgia). Released under the
 [MIT License](https://github.com/nuztalgia/taterbot/blob/main/LICENSE).
 
 **Image Assets:** Included under [fair use](https://www.copyright.gov/fair-use/)
